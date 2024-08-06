@@ -92,7 +92,7 @@ func handleCreatePaymentIntent(writer http.ResponseWriter, request *http.Request
 func calculateOrderAmount(productID string) int64 {
 	switch productID {
 	case "Forever pants":
-		return 2000
+		return 26000
 	case "Forever shirt":
 		return 15500
 	case "Forever hood":
