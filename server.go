@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 
@@ -67,6 +69,23 @@ func handleCreatePaymentIntent(writer http.ResponseWriter, request *http.Request
 	}
 
 	fmt.Println(paymentIntent.ClientSecret)
+
+	var response struct {
+ 	  ClientSecret string `json:"clientSecret"`
+	}
+	response.ClientSecret = paymentIntent.ClientSecret
+
+	var buf bytes.Buffer
+	err = json.NewEncoder( &buf).Encode(response)
+	if err != nil{
+		http.Error(writer,err.Error(),http.StatusInternalServerError)
+	}
+	writer.Header().Set("content-type","application/json")
+
+	_,err = io.Copy(writer,&buf)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 }
 
