@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"github.com/stripe/stripe-go/v79"
 )
 
 func main() {
@@ -46,4 +47,21 @@ func handleCreatePaymentIntent(writer http.ResponseWriter, request *http.Request
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	params := &stripe.PaymentIntentParams{
+		Amount: stripe.Int64(calculateOrderAmount(req.ProductId)),
+
+	}
+}
+func calculateOrderAmount(productID string)int64{
+	switch  productID {
+	case "Forever pants":
+		return 26000
+	case  "Forever shirt":
+		return 15500
+	case  "Forever hood":
+		return 30000
+
+}
+return 0
 }
