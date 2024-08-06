@@ -5,10 +5,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"github.com/stripe/stripe-go/v79"
+	"github.com/stripe/stripe-go/v79/paymentintent"
 )
 
 func main() {
+
+	stripe.Key = "sk_test_51PkTceBbK8Tj5KydsvXUODO4UmjbxmFJeSpYGRMoJAwK26SePfrQ3mFWON4YDLU52UXpIYOIEdYFGKOByBx8dk4S00VPJHTUpY"
+
 	http.HandleFunc("/create-payment-intent", handleCreatePaymentIntent)
 	http.HandleFunc("/health", handleHealth)
 
@@ -49,19 +54,31 @@ func handleCreatePaymentIntent(writer http.ResponseWriter, request *http.Request
 	}
 
 	params := &stripe.PaymentIntentParams{
-		Amount: stripe.Int64(calculateOrderAmount(req.ProductId)),
-
+		Amount:   stripe.Int64(calculateOrderAmount(req.ProductId)),
+		Currency: stripe.String(string(stripe.CurrencyUSD)),
+		AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{
+			Enabled: stripe.Bool(true),
+		},
 	}
+
+	paymentIntent, err := paymentintent.New(params)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+	}
+
+	fmt.Println(paymentIntent.ClientSecret)
+
 }
-func calculateOrderAmount(productID string)int64{
-	switch  productID {
+
+func calculateOrderAmount(productID string) int64 {
+	switch productID {
 	case "Forever pants":
-		return 26000
-	case  "Forever shirt":
+		return 2000
+	case "Forever shirt":
 		return 15500
-	case  "Forever hood":
+	case "Forever hood":
 		return 30000
 
-}
-return 0
+	}
+	return 5000
 }
