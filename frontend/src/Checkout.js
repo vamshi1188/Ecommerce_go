@@ -10,13 +10,12 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import AddressForm from "./AddressForm";
 import StripePayment from "./StripePayment";
+import theme from './theme'; // Importing the custom theme
 
 const steps = ["Shipping address", "Payment"];
-
-const theme = createTheme();
 
 export default function Checkout({ customerData }) {
   function getStepContent(step) {
@@ -60,7 +59,7 @@ export default function Checkout({ customerData }) {
       </AppBar>
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-          <Typography component="h1" variant="h4" align="center">
+          <Typography component="h1" variant="h4" align="center" gutterBottom>
             Checkout
           </Typography>
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
